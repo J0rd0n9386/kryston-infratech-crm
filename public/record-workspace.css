@@ -1,0 +1,62 @@
+/* Record-first workspace. Deliberately scoped away from the welcome screen. */
+.app-shell { --sidebar-w:232px; --canvas:#fff; --surface:#fff; --surface-alt:#f8f9fb; --line:#eceef1; --line-strong:#dfe2e8; --ink:#24262b; --ink-soft:#454851; --muted:#737782; background:var(--canvas); }
+html[data-theme=dark] .app-shell { --canvas:#15171b; --surface:#191c21; --surface-alt:#20242b; --line:#2c3038; --line-strong:#414754; --ink:#eeeef1; --ink-soft:#c9ccd3; --muted:#a0a6b1; }
+.app-shell .sidebar { background:var(--surface-alt); padding:12px 10px; }
+.app-shell .sidebar-brand { padding:4px 8px 16px; margin-bottom:8px; }
+.app-shell .sidebar-brand strong { color:var(--ink); font-size:16px; font-weight:650; letter-spacing:-.025em; }
+.app-shell .brand-mark { background:#25272c; color:#fff; border-radius:8px; box-shadow:none; }
+.app-shell .nav { gap:2px; }
+.app-shell .nav-label { font-size:11px; font-weight:500; text-transform:none; letter-spacing:0; padding:16px 12px 6px; }
+.app-shell .nav-item { min-height:36px; padding:8px 10px; font-size:13px; border-radius:6px; color:var(--ink-soft); }
+.app-shell .nav-item.active { background:var(--line); color:var(--ink); font-weight:600; }
+.app-shell .nav-item:hover { background:var(--line); color:var(--ink); }
+.app-shell .nav-item .icon { width:16px; height:16px; opacity:.8; }
+.app-shell .topbar { min-height:58px; padding:8px 20px; background:var(--surface); }
+.app-shell .topbar-title h1 { font-size:18px; font-weight:600; }
+.app-shell .topbar-title .eyebrow { display:none; }
+.app-shell .topbar-user { display:none; }
+.app-shell .view { padding:20px; max-width:none; }
+.app-shell .page-head { margin-bottom:0; gap:12px; }
+.app-shell .page-head h2 { font-size:19px; font-weight:600; }
+.app-shell .page-head p { font-size:12px; }
+.app-shell .btn { min-height:34px; font-size:12px; padding:6px 11px; border-radius:7px; font-weight:500; }
+.app-shell .btn-primary { background:#2667e8; border-color:#2667e8; }
+.app-shell .btn-primary:hover { background:#1b53c2; }
+.app-shell .card { box-shadow:none; border-radius:8px; }
+.app-shell .card-head { padding:14px 16px; }
+.app-shell .card-body { padding:16px; }
+.app-shell .card-body.tight { padding:0; }
+.app-shell .table-wrap { border-radius:0; }
+.app-shell table.data { border-collapse:collapse; width:100%; }
+.app-shell table.data th { background:var(--surface); font-size:12px; font-weight:500; color:var(--muted); height:38px; }
+.app-shell table.data td { font-size:13px; height:44px; }
+.app-shell table.data th,.app-shell table.data td { padding:8px 12px; border-bottom:1px solid var(--line); border-right:1px solid var(--line); }
+.app-shell table.data th:last-child,.app-shell table.data td:last-child { border-right:0; }
+.app-shell table.data tbody tr:hover { background:var(--surface-alt); }
+.app-shell .cell-title { font-size:13px; font-weight:500; }
+.app-shell .cell-sub { font-size:11px; margin-top:2px; color:var(--muted); }
+.app-shell .badge { font-size:11px; line-height:1.4; padding:2px 7px; border-radius:5px; font-weight:500; }
+.app-shell .toolbar { padding:12px 16px; gap:10px; background:var(--surface); border-bottom:1px solid var(--line); }
+.app-shell .toolbar input,.app-shell .toolbar select { min-height:34px; font-size:12px; padding:6px 10px; }
+.app-shell .toolbar .field > span { font-size:11px; }
+.app-shell[data-page=leads] .view { padding:18px 0 0; }
+.app-shell[data-page=leads] .page-head { padding:0 20px; }
+.app-shell[data-page=leads] .view > .stack > .card { border-radius:0; border-left:0; border-right:0; }
+.app-shell .day-hello { font-family:var(--font); font-size:23px; font-weight:600; }
+.app-shell .stat-card { box-shadow:none; padding:16px; }
+.app-shell .stat-card .stat-value { font-size:26px; }
+.app-shell .stat-card::after { display:none; }
+.app-shell .empty-state { background:var(--surface-alt); border:0; border-radius:6px; }
+.modal-root:has(.record-drawer) { padding:0; justify-content:flex-end; align-items:stretch; background:#11182738; backdrop-filter:none; }
+.modal.record-drawer { width:min(780px,90vw); max-height:100dvh; height:100dvh; border-radius:0; border:0; border-left:1px solid var(--line); box-shadow:-12px 0 48px #0002; }
+.record-drawer .modal-head { padding:20px 24px; }
+.record-drawer .modal-body { padding:24px; }
+@media(max-width:700px) {
+  .app-shell .topbar { padding:10px 12px; }
+  .app-shell .btn,.app-shell .nav-item { min-height:44px; }
+  .app-shell .view { padding:16px 12px; }
+  .app-shell table.data td { height:auto; border-right:0; }
+  .app-shell .toolbar { flex-wrap:wrap; }
+  .modal.record-drawer { width:100%; }
+  .record-drawer .modal-body { padding:16px; }
+}

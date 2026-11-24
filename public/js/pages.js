@@ -4914,7 +4914,7 @@
     openModal({
       title: lead.customer_name,
       subtitle: `${lead.id} · ${lead.source} · ${KRY.stageLabel(lead.stage)}`,
-      size: 'wide',
+      size: 'record-drawer',
       body,
       actions: [{ label: t('common.close'), onClick: closeModal }],
     });

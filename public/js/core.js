@@ -1819,6 +1819,7 @@
     if (guard && !guard()) page = 'overview';
 
     state.page = page;
+    document.getElementById('appShell').dataset.page = page;
     const meta = PAGE_META[page] || PAGE_META.overview;
     const title = t(meta.titleKey);
     document.getElementById('pageTitle').textContent = title;
