@@ -37,10 +37,23 @@
   const langPanel = document.getElementById("langPanel");
 
   let notificationTimer = null;
+  const welcomeHero = document.getElementById('welcomeHero');
+  const openLogin = () => {
+    loginScreen.classList.add('show-login');
+    welcomeHero.hidden = true;
+    loginEmail.focus();
+  };
+  document.getElementById('welcomeSignIn').addEventListener('click', openLogin);
+  document.getElementById('backToWelcome').addEventListener('click', () => {
+    loginScreen.classList.remove('show-login');
+    welcomeHero.hidden = false;
+    document.getElementById('welcomeSignIn').focus();
+  });
 
   document.querySelector('.skip-link')?.addEventListener('click', (event) => {
     event.preventDefault();
-    document.getElementById(appShell.hidden ? 'loginEmail' : 'view').focus();
+    if (appShell.hidden) openLogin();
+    else document.getElementById('view').focus();
   });
 
   /* --------------------------------------------------------------- Language */
@@ -101,7 +114,7 @@
       loginError.textContent = message;
       loginError.hidden = false;
     }
-    setTimeout(() => loginEmail.focus(), 30);
+    setTimeout(() => loginScreen.classList.contains('show-login') ? loginEmail.focus() : document.getElementById('welcomeSignIn').focus(), 30);
   }
   KRY.showLogin = showLogin;
 
