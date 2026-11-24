@@ -1,12 +1,12 @@
 /* Construction workspace: restrained surfaces and a single blue action colour. */
 .login-screen { display:block; min-height:100dvh; background:#111b21; }
 .login-screen:not(.show-login) > .login-panel,.login-screen:not(.show-login) > .login-aside { display:none; }
-.welcome-hero { min-height:100dvh; display:flex; flex-direction:column; color:#fff; background:linear-gradient(180deg,#07101580,#07101540 40%,#071015b3),url('/assets/login-architecture.png') center/cover; }
+.welcome-hero { min-height:100dvh; display:flex; flex-direction:column; color:#fff; background:linear-gradient(90deg,#241c16ed 0%,#241c16c7 38%,#241c1640 75%),url('/assets/login-interior.png') center/cover; }
 .welcome-header,.welcome-footer { display:flex; justify-content:space-between; align-items:center; gap:20px; padding:32px 5vw; }
 .welcome-header strong { font-size:20px; letter-spacing:.08em; }
 .welcome-header strong span { font-size:11px; display:block; letter-spacing:.35em; margin-top:4px; }
 .welcome-header > span { font-size:12px; color:#e2e6e8; }
-.welcome-content { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:64px 24px; }
+.welcome-content { flex:1; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; text-align:left; padding:64px 5vw; max-width:720px; }
 .welcome-eyebrow { font-size:10px; letter-spacing:.24em; color:#ebded0; }
 .welcome-content h1 { font-family:Georgia,'Times New Roman',serif; font-size:clamp(44px,6.6vw,88px); font-weight:400; line-height:1.06; letter-spacing:-.035em; margin:24px 0; color:#fff; }
 .welcome-content > p:not(.welcome-eyebrow) { font-size:15px; line-height:1.8; color:#f1f2f3; }
@@ -15,11 +15,13 @@
 .welcome-footer { font-size:10px; letter-spacing:.1em; color:#dddfe3; border-top:1px solid #ffffff24; }
 .login-screen.show-login { display:grid; grid-template-columns:minmax(360px,480px) 1fr; }
 .login-screen.show-login .login-panel { padding:40px 48px; min-height:100dvh; background:var(--surface); }
-.login-screen.show-login .login-aside { background:linear-gradient(0deg,#071015b3,#07101520),url('/assets/login-architecture.png') center/cover; align-items:flex-end; }
+.login-screen.show-login .login-aside { background:linear-gradient(0deg,#241c16c7,#241c1620),url('/assets/login-interior.png') center/cover; align-items:flex-end; }
 .login-aside .flow-card { background:#101b24c9; border:1px solid #ffffff30; backdrop-filter:blur(12px); }
 .login-back { background:none; border:0; padding:0; min-height:44px; text-align:left; color:var(--muted); cursor:pointer; margin-bottom:24px; }
 #loginCredentials { display:grid; gap:18px; }
 @media(max-width:760px) {
+  .welcome-hero { background-image:linear-gradient(180deg,#241c1699,#241c16dc),url('/assets/login-interior.png'); }
+  .welcome-content { padding:48px 24px; }
   .welcome-header,.welcome-footer { padding:24px; }
   .welcome-header > span,.welcome-footer span:last-child { display:none; }
   .login-screen.show-login { display:block; }
