@@ -13,20 +13,26 @@
 .welcome-cta { display:flex; align-items:center; gap:32px; margin-top:32px; padding:16px 24px; border:1px solid #e8ded0; border-radius:4px; background:#f3ebdf; color:#182127; font-weight:600; cursor:pointer; min-height:52px; }
 .welcome-cta:hover { background:#fff; }
 .welcome-footer { font-size:10px; letter-spacing:.1em; color:#dddfe3; border-top:1px solid #ffffff24; }
-.login-screen.show-login { display:grid; grid-template-columns:minmax(360px,480px) 1fr; }
-.login-screen.show-login .login-panel { padding:40px 48px; min-height:100dvh; background:var(--surface); }
-.login-screen.show-login .login-aside { background:linear-gradient(0deg,#241c16c7,#241c1620),url('/assets/login-interior.png') center/cover; align-items:flex-end; }
-.login-aside .flow-card { background:#101b24c9; border:1px solid #ffffff30; backdrop-filter:blur(12px); }
-.login-back { background:none; border:0; padding:0; min-height:44px; text-align:left; color:var(--muted); cursor:pointer; margin-bottom:24px; }
+.login-screen.show-login { display:grid; place-items:center; padding:32px 20px; background:linear-gradient(135deg,#07131dbd,#07131d66),url('/assets/login-construction-crane.png') center/cover fixed; }
+.login-screen.show-login .login-panel { width:min(440px,100%); min-height:0; max-height:calc(100dvh - 64px); overflow:auto; padding:30px 34px; border:1px solid #ffffff99; border-radius:18px; background:#fffffff2; color:#172033; box-shadow:0 28px 80px #07131d73; backdrop-filter:blur(18px); }
+.login-screen.show-login .login-aside { display:none; }
+.login-screen.show-login .login-panel .login-topbar { margin-bottom:22px; }
+.login-screen.show-login .login-panel .login-title { color:#172033; font-size:30px; }
+.login-screen.show-login .login-panel .login-copy,.login-screen.show-login .login-panel .login-product,.login-screen.show-login .login-panel .login-foot { color:#687386; }
+.login-screen.show-login .login-panel .eyebrow,.login-screen.show-login .login-panel .field > span { color:#27364c; }
+.login-screen.show-login .login-panel input { background:#fff; color:#172033; border-color:#cfd7e3; }
+.login-screen.show-login .login-panel .lang-chips { border-color:#dbe1ea; background:#f5f7fa; }
+.login-screen.show-login .login-panel .lang-chip { color:#536075; }
+.login-screen.show-login .login-panel .lang-chip[aria-pressed=true] { background:#fff; color:#0755d9; }
+.login-back { background:none; border:0; padding:0; min-height:36px; text-align:left; color:#536075; cursor:pointer; margin-bottom:12px; }
 #loginCredentials { display:grid; gap:18px; }
 @media(max-width:760px) {
   .welcome-hero { background-image:linear-gradient(180deg,#10192366,#101923cc),url('/assets/welcome-exterior.png'); }
   .welcome-content { padding:48px 24px; }
   .welcome-header,.welcome-footer { padding:24px; }
   .welcome-header > span,.welcome-footer span:last-child { display:none; }
-  .login-screen.show-login { display:block; }
-  .login-screen.show-login .login-panel { padding:24px; }
-  .login-screen.show-login .login-aside { display:none; }
+  .login-screen.show-login { display:grid; padding:18px; background-attachment:scroll; }
+  .login-screen.show-login .login-panel { padding:24px; max-height:calc(100dvh - 36px); }
 }
 :root {
   --brand:#0755d9; --brand-strong:#0645b1; --brand-wash:#edf4ff;
