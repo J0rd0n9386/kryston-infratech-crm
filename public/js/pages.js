@@ -1574,6 +1574,17 @@
       return wrap;
     }
     const c = dash.counts || {};
+    const shortcuts = el('div', { class: 'workspace-shortcuts' });
+    [
+      ['New lead', 'Capture a customer enquiry', 'plus', () => KRY.openNewLead()],
+      ['Approvals', 'Review pending decisions', 'shield', () => navigate('actionqueue')],
+      ['Projects', 'Track delivery and milestones', 'folder', () => navigate('projects')],
+      ['Quotations', 'Review commercial proposals', 'doc', () => navigate('quotations')],
+    ].forEach(([label, description, glyph, action]) => shortcuts.appendChild(
+      el('button', { class: 'workspace-shortcut', type: 'button', onClick: action },
+        el('span', { class: 'workspace-shortcut-icon' }, icon(glyph)),
+        el('strong', { text: label }), el('small', { text: description })),
+    ));
     wrap.appendChild(
       el(
         'div',
@@ -1667,6 +1678,31 @@
       ),
     );
     const right = el('div', { class: 'stack' });
+    right.appendChild(card('Quick actions', 'Your everyday workspace', shortcuts));
+    const projectHost = el('div', { class: 'stack' });
+    try {
+      const projects = await api('/projects');
+      projects.slice(0, 3).forEach((project) => {
+        const percent = Math.max(0, Math.min(100, Number(project.progress) || 0));
+        projectHost.appendChild(el('article', { class: 'workspace-project' },
+          el('div', { class: 'workspace-project-head' },
+            el('span', { class: 'workspace-shortcut-icon' }, icon('folder')),
+            el('div', {}, el('strong', { text: project.customer_name || project.id }),
+              el('p', { class: 'muted small', text: project.project_location || project.id }))),
+          el('div', { class: 'workspace-project-head' },
+            el('span', { class: 'small muted', text: project.status || 'Project progress' }),
+            el('strong', { text: `${percent}%` })),
+          el('div', { class: 'workspace-progress', role: 'progressbar', 'aria-label': 'Project progress',
+            'aria-valuenow': percent, 'aria-valuemin': 0, 'aria-valuemax': 100 },
+            el('span', { style: `width:${percent}%` })),
+          el('button', { class: 'btn btn-ghost', type: 'button', text: 'View project details',
+            onClick: () => KRY.openProjectModal(project.id) })));
+      });
+      if (!projects.length) projectHost.appendChild(emptyState('No projects yet', 'Approved projects and their progress will appear here.'));
+    } catch (error) {
+      projectHost.appendChild(el('p', { class: 'form-error', text: 'Project summary could not load. Open Projects to retry.' }));
+    }
+    right.appendChild(card('Project progress', 'Latest accessible projects', projectHost));
     const funnel = dash.funnel || [];
     right.appendChild(
       card(
