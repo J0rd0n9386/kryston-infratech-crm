@@ -1,0 +1,253 @@
+openapi: 3.0.3
+info:
+  title: Kryston Infratech CRM API
+  description: >
+    Production-grade, hub-and-spoke CRM for Kryston Infratech (construction,
+    interior design, and turnkey architecture). Orchestrated centrally via Admin Desk.
+  version: 3.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /api/health:
+    get:
+      summary: System health check
+      responses:
+        '200':
+          description: Healthy status and version information
+        '503':
+          description: Database degraded
+
+  /api/login:
+    post:
+      summary: Employee authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                totp_code:
+                  type: string
+      responses:
+        '200':
+          description: Authenticated session cookie established
+        '401':
+          description: Invalid credentials
+        '423':
+          description: Account locked out
+
+  /api/leads:
+    get:
+      summary: List leads with RBAC scoping and stage filters
+      parameters:
+        - name: stage
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of leads
+    post:
+      summary: Intake a new lead (Admin Desk or automated intake)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [customer_name, phone]
+              properties:
+                customer_name:
+                  type: string
+                phone:
+                  type: string
+                channel:
+                  type: string
+                  enum: [Online, Offline]
+                source:
+                  type: string
+                auto_route:
+                  type: boolean
+      responses:
+        '201':
+          description: Lead created
+
+  /api/leads/{id}/anonymize:
+    post:
+      summary: DPDP Act 2023 customer right-to-erasure / anonymization
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Customer PII redacted; financial ledgers preserved
+        '403':
+          description: Requires Super Admin
+
+  /api/leads/{id}/boq:
+    get:
+      summary: Fetch Bill of Quantities (BOQ) line items for a lead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: BOQ items, category subtotals and GST breakdown in integer paise
+    post:
+      summary: Add BOQ line item with integer paise precision
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [category, description, quantity, rate_paise]
+              properties:
+                category:
+                  type: string
+                description:
+                  type: string
+                quantity:
+                  type: number
+                unit:
+                  type: string
+                rate_paise:
+                  type: integer
+                gst_rate:
+                  type: number
+      responses:
+        '201':
+          description: Line item added
+
+  /api/work-orders/{id}/billing:
+    get:
+      summary: Get complete billing, payment milestones, and invoice summary
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Milestones, invoices, and payment status
+
+  /api/projects/{id}/snags:
+    get:
+      summary: List all snag items for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Snag items array
+    post:
+      summary: Log a new snag item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [description]
+              properties:
+                description:
+                  type: string
+                location:
+                  type: string
+                priority:
+                  type: string
+                  enum: [Low, Medium, High, Urgent]
+      responses:
+        '201':
+          description: Snag item logged
+
+  /api/projects/{id}/warranties:
+    get:
+      summary: Get active warranties and certificates for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of warranties
+    post:
+      summary: Issue formal warranty certificate upon project completion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scope, start_date, end_date]
+              properties:
+                scope:
+                  type: string
+                start_date:
+                  type: string
+                end_date:
+                  type: string
+                terms:
+                  type: string
+      responses:
+        '201':
+          description: Warranty certificate issued
+
+  /api/dashboard:
+    get:
+      summary: Role-scoped command center metrics and operational KPIs
+      responses:
+        '200':
+          description: Central or spoke analytics payload

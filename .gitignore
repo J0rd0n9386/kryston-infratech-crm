@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Local configuration and secrets
+.env
+.env.local
+.env.*.local
+
+# Runtime data and backups
+data/
+backups/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Logs and editor files
+*.log
+*-tests.txt
+test-results.txt
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Test and coverage output
+coverage/
+.nyc_output/

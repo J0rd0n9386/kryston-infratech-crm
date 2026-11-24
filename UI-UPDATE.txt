@@ -1,0 +1,13 @@
+Kryston Infratech CRM - Professional UI update
+
+Changes:
+- Unified indigo/navy workspace, readable typography, consistent cards, forms and tables.
+- Responsive dashboard, mobile form layout, visible keyboard focus and reduced-motion support.
+- Admin and executive overviews now use /dashboard data for metrics, pipeline, overdue tasks, workload and activity.
+- Removed fabricated sample metrics and alerts from these two overviews; failed dashboard requests display a retry action.
+- Fixed metric helper compatibility with reversed tone/description arguments used by role dashboards.
+
+Run using the existing README setup, database migrations and administrator bootstrap instructions.
+Validation: node scripts/check-syntax.js passed for 96 JavaScript files.
+Browser, database integration and deployment were not validated in this update.
+Other specialist role dashboards may still contain original sample data; review these before production use.

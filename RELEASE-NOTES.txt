@@ -1,0 +1,34 @@
+Kryston Infratech CRM 3.6.0 — Admin Guardian Industry Workflow
+
+FASTEST WINDOWS START
+1. Extract the ZIP into a new folder.
+2. Double-click START-WINDOWS.cmd.
+3. On a new private database, run npm run bootstrap-admin once and enter administrator details.
+4. Run START-WINDOWS.cmd again and open http://127.0.0.1:3000.
+
+START-WINDOWS.cmd installs missing dependencies, generates a unique private JWT secret and starts the CRM. SETUP-WINDOWS.cmd is provided for administrators who want install, setup and migration as separate steps.
+
+WHAT IS IMPLEMENTED
+- Admin is the final guardian: departments cannot route work directly to another department.
+- Staff request inter-department assistance through Admin Requests; decisions can be acknowledged.
+- Customer phone/email stays redacted until Admin grants the assigned employee purpose-bound, channel-specific, expiring access.
+- Quotation revisions invalidate prior sign-off and preserve an immutable version reason.
+- Sales records customer counteroffers; Senior Sales decides; Admin releases terms and records acceptance against the exact version.
+- Accepted quotation -> Work Order -> Admin-prepared handoff -> PM acknowledgement -> Admin activation.
+- Construction execution includes site visits, BOQ, milestones, progress evidence, blockers, change orders, procurement, invoices, payments, snagging, handover and warranty.
+- Role-scoped live dashboards, Admin action queue, pipeline, workload and executive reports with working CSV/Excel exports.
+- India-ready INR/en-IN formatting, IST workflows, Indian mobile validation, GST-ready billing, DPDP anonymisation and audit controls.
+- Professional responsive UI with accessible focus states, loading/empty/error states and mobile-safe actions.
+
+UPGRADING AN EXISTING INSTALLATION
+Back up the database. Preserve .env, data and attachments. Run npm ci, npm run migrate, then npm start. Migration 015 intentionally revokes implicit contact access; Admin must explicitly grant scoped access. Migration 016 adds negotiation, contact-channel, Admin Request and acknowledged handoff controls.
+
+VERIFICATION
+- Syntax gate: 101 JavaScript files passed.
+- ESLint: zero errors.
+- Automated regression: 79/79 tests passed.
+- Browser QA: login, live Admin dashboard, quotation register and executive reports verified.
+- Clean archive excludes .env, database files, attachments, backups and node_modules.
+
+DEPLOYMENT NOTE
+This ZIP is the single-node SQLite/WAL edition. For high-concurrency multi-office production, use managed PostgreSQL/object storage, TLS, off-site backups, monitoring and approved WhatsApp/email providers.

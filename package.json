@@ -1,0 +1,59 @@
+{
+  "name": "kryston-infratech-crm",
+  "version": "3.6.0",
+  "private": true,
+  "description": "Industry-grade Hub-and-Spoke CRM & Operations ERP for Kryston Infratech: Lead intake, Admin Desk orchestration, dual-mode site engineering inspections, zero-float BOQ engine, quotations, work orders, role guardians and project execution",
+  "author": "J0rd0n9386 <ayanroy9546@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/J0rd0n9386/kryston-infratech-crm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/J0rd0n9386/kryston-infratech-crm/issues"
+  },
+  "homepage": "https://github.com/J0rd0n9386/kryston-infratech-crm#readme",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "migrate": "node scripts/migrate.js",
+    "backup": "node src/backup.js",
+    "restore": "node scripts/restore.js",
+    "archive-audit": "node scripts/archive-audit-log.js",
+    "reset-customers": "node scripts/reset-customers.js",
+    "bootstrap-admin": "node scripts/bootstrap-admin.js",
+    "check": "node scripts/check-syntax.js",
+    "lint": "eslint .",
+    "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.js\" \"tests/**/*.js\" \"public/js/**/*.js\"",
+    "coverage": "node --test --experimental-test-coverage",
+    "make-zip": "node scripts/make-zip.js",
+    "setup": "node scripts/setup-env.js",
+    "prestart": "node scripts/setup-env.js",
+    "predev": "node scripts/setup-env.js",
+    "premigrate": "node scripts/setup-env.js",
+    "prebootstrap-admin": "node scripts/setup-env.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.5.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^4.6.0",
+    "otplib": "^13.6.0",
+    "pdfkit": "^0.21.0",
+    "pino": "^10.4.0",
+    "qrcode": "^1.5.4",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "eslint": "^10.15.0",
+    "prettier": "^3.10.1"
+  }
+}
