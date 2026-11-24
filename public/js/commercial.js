@@ -1699,7 +1699,7 @@
       clear(kanbanContainer);
       const kanbanBoard = el("div", { class: "kanban-board" });
 
-      STAGES_KANBAN.forEach((col, colIdx) => {
+      STAGES_KANBAN.forEach((col) => {
         const colLeads = leads.filter((l) => {
           if (bdeFilter !== "ALL") {
             const bdeName = (l.bde_name || l.telecaller_name || "").toLowerCase();
@@ -1839,12 +1839,7 @@
 
   /* -------------------------------------------------- 2. PM Milestones & Site Logs */
   registerPage("milestones", async () => {
-    let projects = [];
-    try {
-      projects = await api("/projects");
-    } catch {
-      projects = [];
-    }
+    const projects = await api("/projects");
     const wrap = el("div", { class: "stack" });
     wrap.appendChild(
       pageHead(
@@ -1857,16 +1852,11 @@
     );
 
     const timelineContainer = el("div", { class: "stack gap-md" });
-    const demoMilestones = [
-      { name: "Slab Casting & RCC Curing", project: "Villa 42 - DLF Phase 5", status: "Completed", due: "10 Nov 2026", progress: 100 },
-      { name: "Brickwork & Internal Plaster", project: "Villa 42 - DLF Phase 5", status: "In Progress", due: "28 Nov 2026", progress: 65 },
-      { name: "Concealed Plumbing & Electrical", project: "Villa 42 - DLF Phase 5", status: "Pending", due: "10 Dec 2026", progress: 20 },
-      { name: "Italian Marble Flooring", project: "Penthouse - Nirvana Country", status: "In Progress", due: "05 Dec 2026", progress: 40 },
-      { name: "Modular Kitchen & Wardrobes", project: "Penthouse - Nirvana Country", status: "Pending", due: "20 Dec 2026", progress: 0 },
-    ];
-
-    demoMilestones.forEach((m) => {
-      const isDone = m.status === "Completed";
+    projects.forEach((project) => {
+      const total = Number(project.milestone_count || 0);
+      const done = Number(project.milestones_completed || 0);
+      const progress = total ? Math.round((done / total) * 100) : Number(project.progress || 0);
+      const isDone = progress >= 100;
       timelineContainer.appendChild(
         el(
           "div",
@@ -1877,27 +1867,29 @@
             el(
               "div",
               {},
-              el("h3", { class: "pm-card-title", text: m.name }),
-              el("p", { class: "pm-card-sub", text: `${m.project} · Target: ${m.due}` }),
+              el("h3", { class: "pm-card-title", text: project.customer_name || project.id }),
+              el("p", { class: "pm-card-sub", text: `${project.id} · ${total ? `${done} of ${total} milestones complete` : "Milestones not configured yet"}` }),
             ),
-            el("span", { class: `badge ${isDone ? "badge-health-ontrack" : "brand"}`, text: m.status }),
+            el("span", { class: `badge ${isDone ? "badge-health-ontrack" : "brand"}`, text: project.status || "Planning" }),
           ),
           el(
             "div",
             { class: "pm-progress-wrap" },
             el("div", { class: "pm-progress-bar" },
-              el("div", { class: "pm-progress-bar-fill", style: `width:${m.progress}%` }),
+            el("div", { class: "pm-progress-bar-fill", style: `width:${progress}%` }),
             ),
           ),
           el(
             "div",
             { class: "row justify-between align-center" },
-            el("span", { class: "metric-mono text-sm", text: `Progress: ${m.progress}%` }),
-            el("button", { class: "btn btn-sm btn-primary", type: "button", onClick: () => KRY.openUpdateProgressModal({ name: m.project }) }, "Update Milestone"),
+            el("span", { class: "metric-mono text-sm", text: `Progress: ${progress}%` }),
+            el("button", { class: "btn btn-sm btn-primary", type: "button", onClick: () => KRY.openProjectModal(project.id) }, "Open project"),
           ),
         ),
       );
     });
+
+    if (!projects.length) timelineContainer.appendChild(emptyState("No project milestones", "Milestones will appear after an approved project is configured."));
 
     wrap.appendChild(card("Active Construction Milestones", "Gantt timeline & critical path checklist", timelineContainer));
     return wrap;
@@ -1910,10 +1902,18 @@
     );
 
     const logList = el("div", { class: "stack gap-sm" });
-    const logs = [
-      { date: "Today, 11:30 AM", site: "DLF Phase 5, Villa 42", author: "Amit Kumar (Site Engg)", notes: "8 masons and 12 helpers on site. Living room screed preparation underway. Sand and cement delivered.", weather: "Clear / 26°C" },
-      { date: "Yesterday, 04:45 PM", site: "Nirvana Country Penthouse", author: "Vikram Sharma (Supervisor)", notes: "Italian marble slab polishing completed in Master Bedroom. Awaiting designer inspection for joint alignment.", weather: "Clear" },
-    ];
+    const projects = await api("/projects");
+    const logs = [];
+    for (const project of projects) {
+      const detail = await api(`/projects/${encodeURIComponent(project.id)}`).catch(() => null);
+      (detail?.updates || []).forEach((update) => logs.push({
+        date: update.created_at,
+        site: project.customer_name || project.id,
+        author: update.employee_name || "Project team",
+        notes: update.details,
+        weather: update.update_type || "Progress update",
+      }));
+    }
 
     logs.forEach((log) => {
       logList.appendChild(
@@ -1931,6 +1931,7 @@
         ),
       );
     });
+    if (!logs.length) logList.appendChild(emptyState("No site logs yet", "Progress updates submitted by the project team will appear here."));
 
     wrap.appendChild(card("Daily Site Activity Diary", "Real-time field supervisor journal", logList));
     return wrap;
@@ -1949,11 +1950,7 @@
       ),
     );
 
-    const campaigns = [
-      { name: "Gurgaon Luxury Villas 2026", platform: "Meta Ads (IG/FB)", spend: "₹45,000", leads: 64, cpl: "₹703", status: "Active" },
-      { name: "Turnkey Interiors Google Search", platform: "Google Ads", spend: "₹28,000", leads: 42, cpl: "₹666", status: "Active" },
-      { name: "Commercial Office Fitouts", platform: "LinkedIn Ads", spend: "₹12,000", leads: 14, cpl: "₹857", status: "Paused" },
-    ];
+    const campaigns = [];
 
     const grid = el("div", { class: "lane-grid" });
     campaigns.forEach((c) => {
@@ -1983,6 +1980,7 @@
         ),
       );
     });
+    if (!campaigns.length) grid.appendChild(emptyState("No campaign reports yet", "Connect a marketing source or log the first verified campaign report."));
 
     wrap.appendChild(card("Performance Campaigns", "Live digital campaigns & ROI metrics", grid));
     return wrap;
@@ -2240,11 +2238,18 @@
       ),
     );
 
-    const photos = [
-      { caption: "RCC Slab Curing Inspection", site: "DLF Villa 42", date: "Today, 11:30 AM", user: "Amit K." },
-      { caption: "Italian Marble Slab Unloading", site: "Nirvana Penthouse", date: "Yesterday", user: "Vikram S." },
-      { caption: "False Ceiling GI Framing", site: "Rajesh Sharma Residence", date: "21 Nov 2026", user: "Rajesh P." },
-    ];
+    const projects = await api("/projects");
+    const photos = [];
+    for (const project of projects) {
+      const files = await api(`/attachments?entity_type=project&entity_id=${encodeURIComponent(project.id)}`).catch(() => []);
+      files.filter((file) => String(file.mime_type || file.mimeType || "").startsWith("image/")).forEach((file) => photos.push({
+        caption: file.original_name || file.filename || "Site photo",
+        site: project.customer_name || project.id,
+        date: file.created_at,
+        user: file.uploader_name || "Team member",
+        url: file.download_url || file.url,
+      }));
+    }
 
     const galleryGrid = el("div", { class: "design-vault-grid" });
     photos.forEach((p) => {
@@ -2252,11 +2257,7 @@
         el(
           "div",
           { class: "drawing-card" },
-          el(
-            "div",
-            { class: "drawing-preview", style: "background: linear-gradient(135deg, #1e293b, #334155);" },
-            icon("camera"),
-          ),
+            el("div", { class: "drawing-preview" }, p.url ? el("img", { src: p.url, alt: p.caption, loading: "lazy" }) : icon("camera")),
           el(
             "div",
             { class: "drawing-card-body" },
@@ -2267,6 +2268,8 @@
         ),
       );
     });
+
+    if (!photos.length) galleryGrid.appendChild(emptyState("No site photos yet", "Approved site photos uploaded by the field team will appear here."));
 
     wrap.appendChild(card("Site Photo Timeline", "Captured via mobile camera & verified by Admin Desk", galleryGrid));
     return wrap;
