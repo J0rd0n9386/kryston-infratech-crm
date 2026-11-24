@@ -38,6 +38,11 @@
 
   let notificationTimer = null;
 
+  document.querySelector('.skip-link')?.addEventListener('click', (event) => {
+    event.preventDefault();
+    document.getElementById(appShell.hidden ? 'loginEmail' : 'view').focus();
+  });
+
   /* --------------------------------------------------------------- Language */
 
   function closeLangPanel() {

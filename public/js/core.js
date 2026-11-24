@@ -276,6 +276,7 @@
           year: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
+          timeZone: 'Asia/Kolkata',
         })
       : '—';
   }
@@ -624,6 +625,7 @@
   /* ---------------------------------------------------------------- Modals */
 
   const modalRoot = () => document.getElementById('modalRoot');
+  let modalReturnFocus = null;
 
   function closeModal() {
     if (typeof KRY.onBeforeModalClose === 'function') {
@@ -636,11 +638,15 @@
     const root = modalRoot();
     clear(root);
     root.hidden = true;
+    document.getElementById('appShell').inert = false;
+    if (modalReturnFocus?.isConnected) modalReturnFocus.focus();
+    modalReturnFocus = null;
   }
   KRY.closeModal = closeModal;
 
   function openModal({ title, subtitle, body, actions = [], footer = null, size = '' }) {
     const root = modalRoot();
+    if (root.hidden) modalReturnFocus = document.activeElement;
     clear(root);
 
     const foot =
@@ -651,11 +657,19 @@
             { class: 'modal-foot' },
             actions.map((action) =>
               el('button', {
-                class: `btn ${action.class || ''}`.trim(),
+                class: `btn ${action.class || (action.isPrimary ? 'btn-primary' : '')}`.trim(),
                 type: 'button',
                 text: action.label,
                 disabled: Boolean(action.disabled),
-                onClick: action.onClick,
+                onClick: async (event) => {
+                  const button = event.currentTarget;
+                  if (button.disabled) return;
+                  button.disabled = true;
+                  button.setAttribute('aria-busy', 'true');
+                  try { await action.onClick?.(event); }
+                  catch (err) { toast(err.message || 'Could not complete this action.', 'error'); }
+                  finally { button.disabled = false; button.removeAttribute('aria-busy'); }
+                },
               }),
             ),
           )
@@ -684,7 +698,6 @@
     );
 
     modal.addEventListener('click', (event) => event.stopPropagation());
-    const previousFocus = document.activeElement;
     modal.addEventListener('keydown', (event) => {
       if (event.key !== 'Tab') return;
       const items = [
@@ -704,14 +717,9 @@
         items[0].focus();
       }
     });
-    const restoreFocus = new window.MutationObserver(() => {
-      if (!root.hidden) return;
-      restoreFocus.disconnect();
-      if (previousFocus?.isConnected) previousFocus.focus();
-    });
-    restoreFocus.observe(root, { attributes: true, attributeFilter: ['hidden'] });
     root.appendChild(modal);
     root.hidden = false;
+    document.getElementById('appShell').inert = true;
 
     const focusTarget = modal.querySelector('input, select, textarea, button');
     if (focusTarget) setTimeout(() => focusTarget.focus(), 30);
@@ -1259,7 +1267,13 @@
           rows.map((row) =>
             el(
               'tr',
-              { class: clickable || row.onClick ? 'clickable' : '', onClick: row.onClick },
+              { class: clickable || row.onClick ? 'clickable' : '', onClick: row.onClick,
+                tabindex: row.onClick ? 0 : undefined,
+                onKeydown: row.onClick ? (event) => {
+                  if (event.target === event.currentTarget && ['Enter', ' '].includes(event.key)) {
+                    event.preventDefault(); row.onClick(event);
+                  }
+                } : undefined },
               row.cells.map((cell, index) =>
                 el(
                   'td',
@@ -1795,8 +1809,10 @@
     return raw || 'overview';
   }
 
+  let routeSequence = 0;
   async function renderRoute() {
     if (!state.user) return;
+    const sequence = ++routeSequence;
     let page = currentPage();
     if (!KRY.pages[page]) page = 'overview';
     const guard = ROLE_PAGE_GUARD[page];
@@ -1810,21 +1826,28 @@
     document.title = `${title} · ${t('app.brand')}`;
     document.querySelectorAll('#nav .nav-item').forEach((button) => {
       button.classList.toggle('active', button.dataset.page === page);
+      if (button.dataset.page === page) button.setAttribute('aria-current', 'page');
+      else button.removeAttribute('aria-current');
     });
     document.getElementById('sidebar').classList.remove('open');
 
     const view = document.getElementById('view');
     clear(view);
-    view.appendChild(el('div', { class: 'loading-block', text: t('common.loading') }));
+    view.setAttribute('aria-busy', 'true');
+    view.appendChild(el('div', { class: 'loading-block', role: 'status', text: t('common.loading') }));
 
     try {
       const node = await KRY.pages[page]();
+      if (sequence !== routeSequence) return;
+      view.removeAttribute('aria-busy');
       clear(view);
       view.appendChild(node || emptyState(t('common.nothingHere'), t('myday.allClearCopy')));
       view.focus({ preventScroll: true });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       refreshBadges();
     } catch (err) {
+      if (sequence !== routeSequence) return;
+      view.removeAttribute('aria-busy');
       clear(view);
       view.appendChild(
         card(
@@ -1957,7 +1980,7 @@
   }
 
   async function mediaUrl(path) {
-    const response = await fetch(`/api${path}`, {
+    const response = await fetch(path.startsWith('/api/') ? path : `/api${path}`, {
       headers: state.token ? { authorization: `Bearer ${state.token}` } : {},
     });
     if (!response.ok) throw new Error('Could not load the file.');
@@ -1992,11 +2015,11 @@
       mediaUrl(file.url)
         .then((url) => {
           clear(stage);
-          if (file.is_image) {
+          if (file.is_image || String(file.mime_type || file.file_type).startsWith('image/')) {
             stage.appendChild(
               el('img', { src: url, alt: file.caption || file.file_name, loading: 'lazy' }),
             );
-          } else if (file.is_audio) {
+          } else if (file.is_audio || String(file.mime_type || file.file_type).startsWith('audio/')) {
             stage.appendChild(el('audio', { src: url, controls: true, preload: 'metadata' }));
           } else {
             stage.appendChild(
@@ -2006,7 +2029,7 @@
         })
         .catch(() => {
           clear(stage);
-          stage.appendChild(el('span', { class: 'small muted', text: '—' }));
+          stage.appendChild(el('span', { class: 'small muted', text: 'File could not load. Reopen this record to retry.' }));
         });
       grid.appendChild(tile);
     });

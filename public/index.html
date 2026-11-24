@@ -15,10 +15,12 @@
   <script src="/js/pages.js" defer></script>
   <script src="/js/work.js" defer></script>
   <script src="/js/commercial.js" defer></script>
+  <script src="/js/workspaces.js" defer></script>
   <script src="/js/admin.js" defer></script>
   <script src="/js/boot.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#view">Skip to workspace</a>
   <svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
     <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol>
     <symbol id="i-board" viewBox="0 0 24 24"><path d="M4 4h5v16H4zM10 4h5v11h-5zM16 4h4v7h-4z"/></symbol>
@@ -148,7 +150,7 @@
 
         <!-- Marketing Spoke Navigation -->
         <p class="nav-label" data-group="marketing" hidden>Marketing</p>
-        <button class="nav-item" type="button" data-page="campaigns" hidden><svg class="icon"><use href="#i-flag"></use></svg><span>Campaigns</span></button>
+        <button class="nav-item" type="button" data-page="campaigns" hidden><svg class="icon"><use href="#i-flag"></use></svg><span>Marketing Tasks</span></button>
         <button class="nav-item" type="button" data-page="leadanalytics" hidden><svg class="icon"><use href="#i-board"></use></svg><span>Lead Analytics</span></button>
         <button class="nav-item" type="button" data-page="contentcalendar" hidden><svg class="icon"><use href="#i-calendar"></use></svg><span>Content Calendar</span></button>
 
@@ -171,8 +173,8 @@
         <!-- Procurement Spoke Navigation -->
         <p class="nav-label" data-group="procurement" hidden>Procurement</p>
         <button class="nav-item" type="button" data-page="procurement" hidden><svg class="icon"><use href="#i-grid"></use></svg><span>Procurement Dashboard</span></button>
-        <button class="nav-item" type="button" data-page="vendors" hidden><svg class="icon"><use href="#i-users"></use></svg><span>Vendor Directory</span></button>
-        <button class="nav-item" type="button" data-page="purchaseorders" hidden><svg class="icon"><use href="#i-doc"></use></svg><span>Purchase Orders</span></button>
+        <button class="nav-item" type="button" data-page="vendors" hidden><svg class="icon"><use href="#i-users"></use></svg><span>Supplier Records</span></button>
+        <button class="nav-item" type="button" data-page="purchaseorders" hidden><svg class="icon"><use href="#i-doc"></use></svg><span>Purchase Requests</span></button>
 
         <p class="nav-label" data-group="leads" data-i18n="nav.group.leads" data-central="true">Leads</p>
         <button class="nav-item" type="button" data-page="taskboard" data-central="true"><svg class="icon"><use href="#i-board"></use></svg><span data-i18n="nav.taskboard">Lead Board</span></button>
@@ -210,7 +212,7 @@
         <div class="global-search-container">
           <div class="global-search-input-wrap">
             <svg class="icon"><use href="#i-search"></use></svg>
-            <input id="globalSearchInput" class="global-search-input" type="search" placeholder="Search leads, projects, customers..." autocomplete="off">
+            <input id="globalSearchInput" aria-label="Search workspace" class="global-search-input" type="search" placeholder="Search leads, projects, customers..." autocomplete="off">
             <kbd class="search-kbd-badge">⌘K</kbd>
           </div>
         </div>
