@@ -70,7 +70,10 @@
     pipeline: { titleKey: 'page.pipeline.title', eyebrowKey: 'page.pipeline.eyebrow' },
     sitevisits: { titleKey: 'page.sitevisits.title', eyebrowKey: 'page.sitevisits.eyebrow' },
     measurements: { titleKey: 'page.measurements.title', eyebrowKey: 'page.measurements.eyebrow' },
-    projectphotos: { titleKey: 'page.projectphotos.title', eyebrowKey: 'page.projectphotos.eyebrow' },
+    projectphotos: {
+      titleKey: 'page.projectphotos.title',
+      eyebrowKey: 'page.projectphotos.eyebrow',
+    },
     designs: { titleKey: 'page.designs.title', eyebrowKey: 'page.designs.eyebrow' },
     designvault: { titleKey: 'page.designvault.title', eyebrowKey: 'page.designvault.eyebrow' },
     revisions: { titleKey: 'page.revisions.title', eyebrowKey: 'page.revisions.eyebrow' },
@@ -80,11 +83,20 @@
     milestones: { titleKey: 'page.milestones.title', eyebrowKey: 'page.milestones.eyebrow' },
     sitelogs: { titleKey: 'page.sitelogs.title', eyebrowKey: 'page.sitelogs.eyebrow' },
     campaigns: { titleKey: 'page.campaigns.title', eyebrowKey: 'page.campaigns.eyebrow' },
-    leadanalytics: { titleKey: 'page.leadanalytics.title', eyebrowKey: 'page.leadanalytics.eyebrow' },
-    contentcalendar: { titleKey: 'page.contentcalendar.title', eyebrowKey: 'page.contentcalendar.eyebrow' },
+    leadanalytics: {
+      titleKey: 'page.leadanalytics.title',
+      eyebrowKey: 'page.leadanalytics.eyebrow',
+    },
+    contentcalendar: {
+      titleKey: 'page.contentcalendar.title',
+      eyebrowKey: 'page.contentcalendar.eyebrow',
+    },
     procurement: { titleKey: 'page.procurement.title', eyebrowKey: 'page.procurement.eyebrow' },
     vendors: { titleKey: 'page.vendors.title', eyebrowKey: 'page.vendors.eyebrow' },
-    purchaseorders: { titleKey: 'page.purchaseorders.title', eyebrowKey: 'page.purchaseorders.eyebrow' },
+    purchaseorders: {
+      titleKey: 'page.purchaseorders.title',
+      eyebrowKey: 'page.purchaseorders.eyebrow',
+    },
     employees: { titleKey: 'page.employees.title', eyebrowKey: 'page.employees.eyebrow' },
     audit: { titleKey: 'page.audit.title', eyebrowKey: 'page.audit.eyebrow' },
     settings: { titleKey: 'page.settings.title', eyebrowKey: 'page.settings.eyebrow' },
@@ -94,7 +106,10 @@
     receivables: { titleKey: 'page.receivables.title', eyebrowKey: 'page.receivables.eyebrow' },
     payables: { titleKey: 'page.payables.title', eyebrowKey: 'page.payables.eyebrow' },
     ledger: { titleKey: 'page.ledger.title', eyebrowKey: 'page.ledger.eyebrow' },
-    quoteapprovals: { titleKey: 'page.quoteapprovals.title', eyebrowKey: 'page.quoteapprovals.eyebrow' },
+    quoteapprovals: {
+      titleKey: 'page.quoteapprovals.title',
+      eyebrowKey: 'page.quoteapprovals.eyebrow',
+    },
     targets: { titleKey: 'page.targets.title', eyebrowKey: 'page.targets.eyebrow' },
   };
 
@@ -122,8 +137,7 @@
     revisions: () => KRY.isCentral() || KRY.roleIs('ARCHITECT'),
     quotations: () => KRY.isCentral() || KRY.isSales(),
     workorders: () => KRY.isCentral() || KRY.isSales() || KRY.roleIs('PROJECT_MANAGER'),
-    projects: () =>
-      KRY.isCentral() || KRY.roleIs('PROJECT_MANAGER') || KRY.roleIs('SITE_ENGINEER'),
+    projects: () => KRY.isCentral() || KRY.roleIs('PROJECT_MANAGER') || KRY.roleIs('SITE_ENGINEER'),
     milestones: () => KRY.isCentral() || KRY.roleIs('PROJECT_MANAGER'),
     sitelogs: () => KRY.isCentral() || KRY.roleIs('PROJECT_MANAGER'),
     campaigns: () => KRY.isCentral() || KRY.roleIs('DIGITAL_MARKETING'),
@@ -245,7 +259,11 @@
   function fmtDate(value) {
     const date = parseDate(value);
     return date
-      ? date.toLocaleDateString(KRY.dateLocale(), { day: '2-digit', month: 'short', year: 'numeric' })
+      ? date.toLocaleDateString(KRY.dateLocale(), {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        })
       : '—';
   }
 
@@ -414,10 +432,18 @@
 
   function statusTone(status) {
     if (!status) return 'neutral';
-    if (['Assigned', 'Draft', 'Pending', 'Planning', 'Requested'].includes(status)) return 'neutral';
-    if (['In Progress', 'Sent', 'Submitted', 'Negotiation', 'Active'].includes(status)) return 'info';
-    if (['Reviewed', 'Completed', 'Approved', 'Finalized', 'Delivered', 'Received'].includes(status)) return 'good';
-    if (['Revision Needed', 'Clarification Needed', 'On Hold', 'Delayed', 'Warning'].includes(status)) return 'warn';
+    if (['Assigned', 'Draft', 'Pending', 'Planning', 'Requested'].includes(status))
+      return 'neutral';
+    if (['In Progress', 'Sent', 'Submitted', 'Negotiation', 'Active'].includes(status))
+      return 'info';
+    if (
+      ['Reviewed', 'Completed', 'Approved', 'Finalized', 'Delivered', 'Received'].includes(status)
+    )
+      return 'good';
+    if (
+      ['Revision Needed', 'Clarification Needed', 'On Hold', 'Delayed', 'Warning'].includes(status)
+    )
+      return 'warn';
     if (['Rejected', 'Cancelled', 'Overdue', 'Dishonoured'].includes(status)) return 'danger';
     if (status === 'Pending Admin Approval') return 'brand';
     return 'neutral';
@@ -428,14 +454,18 @@
   }
 
   function priorityBadge(priority) {
-    const tone = { Urgent: 'danger', High: 'warn', Medium: 'info', Low: 'neutral' }[priority] || 'neutral';
+    const tone =
+      { Urgent: 'danger', High: 'warn', Medium: 'info', Low: 'neutral' }[priority] || 'neutral';
     return badge(KRY.priorityLabel(priority || 'Medium'), tone);
   }
 
   function slaBadge(sla) {
     if (!sla || sla.status === 'unknown') return badge(t('due.noDue'), 'neutral');
     if (sla.status === 'overdue') {
-      return badge(t('due.lateBy', { duration: durationText(Math.abs(sla.hoursRemaining)) }), 'danger');
+      return badge(
+        t('due.lateBy', { duration: durationText(Math.abs(sla.hoursRemaining)) }),
+        'danger',
+      );
     }
     if (sla.status === 'warning') {
       return badge(t('due.left', { duration: durationText(sla.hoursRemaining) }), 'warn');
@@ -448,7 +478,11 @@
   }
 
   function roleBadge(role) {
-    const tone = CENTRAL_ROLES.includes(role) ? 'brand' : SALES_ROLES.includes(role) ? 'info' : 'neutral';
+    const tone = CENTRAL_ROLES.includes(role)
+      ? 'brand'
+      : SALES_ROLES.includes(role)
+        ? 'info'
+        : 'neutral';
     return badge(KRY.roleLabel(role), tone);
   }
 
@@ -528,7 +562,9 @@
     }
 
     const contentType = response.headers.get('content-type') || '';
-    const data = contentType.includes('application/json') ? await response.json() : await response.text();
+    const data = contentType.includes('application/json')
+      ? await response.json()
+      : await response.text();
 
     if (!response.ok) {
       if (response.status === 409) {
@@ -537,7 +573,12 @@
           onClick: () => window.location.reload(),
         });
       }
-      const error = new Error((data && data.error) || (response.status === 409 ? 'Refresh, someone else changed this' : `Request failed (${response.status}).`));
+      const error = new Error(
+        (data && data.error) ||
+          (response.status === 409
+            ? 'Refresh, someone else changed this'
+            : `Request failed (${response.status}).`),
+      );
       error.status = response.status;
       error.data = data;
       throw error;
@@ -646,10 +687,22 @@
     const previousFocus = document.activeElement;
     modal.addEventListener('keydown', (event) => {
       if (event.key !== 'Tab') return;
-      const items = [...modal.querySelectorAll('button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]')].filter(node => node.getClientRects().length);
-      if (!items.length) { event.preventDefault(); return; }
-      if (event.shiftKey && document.activeElement === items[0]) { event.preventDefault(); items[items.length - 1].focus(); }
-      else if (!event.shiftKey && document.activeElement === items[items.length - 1]) { event.preventDefault(); items[0].focus(); }
+      const items = [
+        ...modal.querySelectorAll(
+          'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]',
+        ),
+      ].filter((node) => node.getClientRects().length);
+      if (!items.length) {
+        event.preventDefault();
+        return;
+      }
+      if (event.shiftKey && document.activeElement === items[0]) {
+        event.preventDefault();
+        items[items.length - 1].focus();
+      } else if (!event.shiftKey && document.activeElement === items[items.length - 1]) {
+        event.preventDefault();
+        items[0].focus();
+      }
     });
     const restoreFocus = new window.MutationObserver(() => {
       if (!root.hidden) return;
@@ -804,8 +857,17 @@
       subtitle,
       size,
       body: form,
-      footer: el('div', { class: 'modal-foot' },
-        el('button', { class: 'btn', type: 'button', text: t('common.cancel'), onClick: closeModal }), submit),
+      footer: el(
+        'div',
+        { class: 'modal-foot' },
+        el('button', {
+          class: 'btn',
+          type: 'button',
+          text: t('common.cancel'),
+          onClick: closeModal,
+        }),
+        submit,
+      ),
       actions: [
         { label: t('common.cancel'), onClick: closeModal },
         { label: submitLabel, class: 'btn-primary', onClick: () => form.requestSubmit() },
@@ -814,7 +876,13 @@
   }
   KRY.openFormModal = openFormModal;
 
-  function confirmAction({ title, message, confirmLabel = t('common.save'), danger = false, onConfirm }) {
+  function confirmAction({
+    title,
+    message,
+    confirmLabel = t('common.save'),
+    danger = false,
+    onConfirm,
+  }) {
     openModal({
       title,
       size: 'narrow',
@@ -894,7 +962,9 @@
           type: 'button',
           dataset: { value: String(option.value) },
           onClick: () => {
-            wrap.querySelectorAll('.chip-button').forEach((node) => node.classList.remove('selected'));
+            wrap
+              .querySelectorAll('.chip-button')
+              .forEach((node) => node.classList.remove('selected'));
             button.classList.add('selected');
             onSelect(option.value);
           },
@@ -1115,7 +1185,12 @@
         ? el(
             'div',
             { class: 'card-head' },
-            el('div', {}, el('h2', { text: title || '' }), description ? el('p', { text: description }) : null),
+            el(
+              'div',
+              {},
+              el('h2', { text: title || '' }),
+              description ? el('p', { text: description }) : null,
+            ),
             el('span', { class: 'spacer' }),
             options.actions || null,
           )
@@ -1157,7 +1232,11 @@
     return list;
   }
 
-  function dataTable(headers, rows, { emptyTitle = t('common.nothingHere'), emptyMessage = '', clickable = false } = {}) {
+  function dataTable(
+    headers,
+    rows,
+    { emptyTitle = t('common.nothingHere'), emptyMessage = '', clickable = false } = {},
+  ) {
     if (!rows.length) return emptyState(emptyTitle, emptyMessage);
     return el(
       'div',
@@ -1165,7 +1244,15 @@
       el(
         'table',
         { class: 'data' },
-        el('thead', {}, el('tr', {}, headers.map((header) => el('th', { text: header })))),
+        el(
+          'thead',
+          {},
+          el(
+            'tr',
+            {},
+            headers.map((header) => el('th', { text: header })),
+          ),
+        ),
         el(
           'tbody',
           {},
@@ -1173,7 +1260,13 @@
             el(
               'tr',
               { class: clickable || row.onClick ? 'clickable' : '', onClick: row.onClick },
-              row.cells.map((cell, index) => el('td', { 'data-label': headers[index] || '' }, cell instanceof Node ? cell : String(cell ?? '—'))),
+              row.cells.map((cell, index) =>
+                el(
+                  'td',
+                  { 'data-label': headers[index] || '' },
+                  cell instanceof Node ? cell : String(cell ?? '—'),
+                ),
+              ),
             ),
           ),
         ),
@@ -1202,8 +1295,10 @@
         const lower = tagText.toLowerCase();
         if (lower.includes('connected')) badgeCls += ' badge-outcome-connected';
         else if (lower.includes('callback')) badgeCls += ' badge-outcome-callback';
-        else if (lower.includes('no answer') || lower.includes('busy')) badgeCls += ' badge-outcome-busy';
-        else if (lower.includes('wrong') || lower.includes('invalid')) badgeCls += ' badge-outcome-wrong';
+        else if (lower.includes('no answer') || lower.includes('busy'))
+          badgeCls += ' badge-outcome-busy';
+        else if (lower.includes('wrong') || lower.includes('invalid'))
+          badgeCls += ' badge-outcome-wrong';
         else badgeCls += ' badge-purpose';
 
         container.appendChild(el('span', { class: badgeCls, text: `[${tagText}]` }));
@@ -1259,15 +1354,22 @@
                 { class: 'between' },
                 el('span', {
                   class: 'timeline-title',
-                  text: t(`activity.${entry.action_type}`) === `activity.${entry.action_type}`
-                    ? titleCase(entry.action_type)
-                    : t(`activity.${entry.action_type}`),
+                  text:
+                    t(`activity.${entry.action_type}`) === `activity.${entry.action_type}`
+                      ? titleCase(entry.action_type)
+                      : t(`activity.${entry.action_type}`),
                 }),
                 el('span', { class: 'timeline-meta', text: fmtDateTime(entry.created_at) }),
               ),
               el('div', {
                 class: 'timeline-meta',
-                text: [entry.from_employee_name || entry.from_name, (entry.to_employee_name || entry.to_name) ? `→ ${entry.to_employee_name || entry.to_name}` : '', entry.to_department]
+                text: [
+                  entry.from_employee_name || entry.from_name,
+                  entry.to_employee_name || entry.to_name
+                    ? `→ ${entry.to_employee_name || entry.to_name}`
+                    : '',
+                  entry.to_department,
+                ]
                   .filter(Boolean)
                   .join(' '),
               }),
@@ -1277,7 +1379,9 @@
                     'div',
                     { class: 'pill-row' },
                     entry.old_stage ? badge(KRY.stageLabel(entry.old_stage), 'neutral') : null,
-                    entry.new_stage ? badge(`→ ${KRY.stageLabel(entry.new_stage)}`, stageTone(entry.new_stage)) : null,
+                    entry.new_stage
+                      ? badge(`→ ${KRY.stageLabel(entry.new_stage)}`, stageTone(entry.new_stage))
+                      : null,
                   )
                 : null,
             ),
@@ -1366,9 +1470,10 @@
   function optionsFor(employees, predicate, { placeholder = t('common.select') } = {}) {
     return [
       { value: '', label: placeholder },
-      ...employees
-        .filter(predicate)
-        .map((employee) => ({ value: employee.id, label: `${employee.name} · ${KRY.roleLabel(employee.role)}` })),
+      ...employees.filter(predicate).map((employee) => ({
+        value: employee.id,
+        label: `${employee.name} · ${KRY.roleLabel(employee.role)}`,
+      })),
     ];
   }
   KRY.optionsFor = optionsFor;
@@ -1390,7 +1495,8 @@
     document.getElementById('userRole').textContent = KRY.roleLabel(user.role);
     document.getElementById('userInitials').textContent = initials(user.name);
     document.getElementById('topbarName').textContent = user.name;
-    document.getElementById('topbarDept').textContent = `${KRY.roleLabel(user.role)} · ${KRY.deptLabel(user.department)}`;
+    document.getElementById('topbarDept').textContent =
+      `${KRY.roleLabel(user.role)} · ${KRY.deptLabel(user.department)}`;
     document.getElementById('topbarInitials').textContent = initials(user.name);
 
     document.querySelectorAll('#nav .nav-item').forEach((button) => {
@@ -1440,7 +1546,9 @@
     });
 
     // Role-specific button labels and navigation adaptations
-    const myDayBtn = document.querySelector('#nav button[data-page="overview"] span:not(.nav-badge)');
+    const myDayBtn = document.querySelector(
+      '#nav button[data-page="overview"] span:not(.nav-badge)',
+    );
     if (myDayBtn) {
       if (user.role === 'SUPER_ADMIN') myDayBtn.textContent = 'Command Center';
       else if (user.role === 'ADMIN') myDayBtn.textContent = 'Mission Control';
@@ -1455,46 +1563,63 @@
       else myDayBtn.textContent = t('nav.myday') || 'My Day';
     }
 
-    const taskboardBtn = document.querySelector('#nav button[data-page="taskboard"] span:not(.nav-badge)');
+    const taskboardBtn = document.querySelector(
+      '#nav button[data-page="taskboard"] span:not(.nav-badge)',
+    );
     if (taskboardBtn && user.role === 'ADMIN') {
       taskboardBtn.textContent = 'Global Pipeline';
     }
 
-    const employeesBtn = document.querySelector('#nav button[data-page="employees"] span:not(.nav-badge)');
+    const employeesBtn = document.querySelector(
+      '#nav button[data-page="employees"] span:not(.nav-badge)',
+    );
     if (employeesBtn && (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN')) {
       employeesBtn.textContent = 'Team Directory';
     }
 
-    const pipelineBtn = document.querySelector('#nav button[data-page="pipeline"] span:not(.nav-badge)');
+    const pipelineBtn = document.querySelector(
+      '#nav button[data-page="pipeline"] span:not(.nav-badge)',
+    );
     if (pipelineBtn && KRY.isSalesManager()) {
       pipelineBtn.textContent = 'Team Pipeline';
     }
 
-    const telecallerBtn = document.querySelector('#nav button[data-page="telecaller"] span:not(.nav-badge)');
+    const telecallerBtn = document.querySelector(
+      '#nav button[data-page="telecaller"] span:not(.nav-badge)',
+    );
     if (telecallerBtn) {
       if (KRY.isSales()) telecallerBtn.textContent = 'Follow-ups Due';
       else telecallerBtn.textContent = t('nav.telecaller') || 'Calls';
     }
 
-    const projectsBtn = document.querySelector('#nav button[data-page="projects"] span:not(.nav-badge)');
+    const projectsBtn = document.querySelector(
+      '#nav button[data-page="projects"] span:not(.nav-badge)',
+    );
     if (projectsBtn) {
       if (user.role === 'PROJECT_MANAGER') projectsBtn.textContent = 'My Projects';
       else projectsBtn.textContent = t('nav.projects') || 'Projects';
     }
 
-    const sitevisitsBtn = document.querySelector('#nav button[data-page="sitevisits"] span:not(.nav-badge)');
+    const sitevisitsBtn = document.querySelector(
+      '#nav button[data-page="sitevisits"] span:not(.nav-badge)',
+    );
     if (sitevisitsBtn) {
       if (user.role === 'SITE_ENGINEER') sitevisitsBtn.textContent = 'My Site Visits';
       else sitevisitsBtn.textContent = t('nav.sitevisits') || 'Site Visits';
     }
 
-    const procurementBtn = document.querySelector('#nav button[data-page="procurement"] span:not(.nav-badge)');
+    const procurementBtn = document.querySelector(
+      '#nav button[data-page="procurement"] span:not(.nav-badge)',
+    );
     if (procurementBtn) {
-      if (user.role === 'SITE_ENGINEER' || user.role === 'PROJECT_MANAGER') procurementBtn.textContent = 'Material Requests';
+      if (user.role === 'SITE_ENGINEER' || user.role === 'PROJECT_MANAGER')
+        procurementBtn.textContent = 'Material Requests';
       else procurementBtn.textContent = 'Procurement Dashboard';
     }
 
-    const workTasksBtn = document.querySelector('#nav button[data-page="tasks"] span:not(.nav-badge)');
+    const workTasksBtn = document.querySelector(
+      '#nav button[data-page="tasks"] span:not(.nav-badge)',
+    );
     if (workTasksBtn) {
       if (user.role === 'PURCHASE') workTasksBtn.textContent = 'My Tasks';
       else workTasksBtn.textContent = t('nav.tasks') || 'My Work';
@@ -1695,9 +1820,7 @@
     try {
       const node = await KRY.pages[page]();
       clear(view);
-      view.appendChild(
-        node || emptyState(t('common.nothingHere'), t('myday.allClearCopy')),
-      );
+      view.appendChild(node || emptyState(t('common.nothingHere'), t('myday.allClearCopy')));
       view.focus({ preventScroll: true });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       refreshBadges();
@@ -1853,15 +1976,26 @@
       const tile = el(
         'figure',
         { class: 'attachment' },
-        el('div', { class: 'attachment-stage' }, el('span', { class: 'attachment-loading', text: '…' })),
-        el('figcaption', {}, el('strong', { text: file.file_name }), file.caption ? el('small', { text: file.caption }) : null),
+        el(
+          'div',
+          { class: 'attachment-stage' },
+          el('span', { class: 'attachment-loading', text: '…' }),
+        ),
+        el(
+          'figcaption',
+          {},
+          el('strong', { text: file.file_name }),
+          file.caption ? el('small', { text: file.caption }) : null,
+        ),
       );
       const stage = tile.querySelector('.attachment-stage');
       mediaUrl(file.url)
         .then((url) => {
           clear(stage);
           if (file.is_image) {
-            stage.appendChild(el('img', { src: url, alt: file.caption || file.file_name, loading: 'lazy' }));
+            stage.appendChild(
+              el('img', { src: url, alt: file.caption || file.file_name, loading: 'lazy' }),
+            );
           } else if (file.is_audio) {
             stage.appendChild(el('audio', { src: url, controls: true, preload: 'metadata' }));
           } else {
@@ -1924,7 +2058,7 @@
   function toLeadLike(item) {
     return {
       id: item.lead_id || item.id,
-      task_id: item.lead_id ? item.id : (item.task_id || null),
+      task_id: item.lead_id ? item.id : item.task_id || null,
       customer_name: item.customer_name,
       phone: item.phone,
       stage: item.stage,
@@ -1966,7 +2100,8 @@
         if (typeof KRY.openSiteInspection === 'function') KRY.openSiteInspection(toTaskLike(item));
         return;
       case 'submit_drawing':
-        if (typeof KRY.openDesignSubmission === 'function') KRY.openDesignSubmission(toTaskLike(item));
+        if (typeof KRY.openDesignSubmission === 'function')
+          KRY.openDesignSubmission(toTaskLike(item));
         return;
       case 'review_submission':
         if (typeof KRY.openTaskReview === 'function') KRY.openTaskReview(toTaskLike(item));
@@ -1975,10 +2110,12 @@
         if (typeof KRY.openRouteWizard === 'function') KRY.openRouteWizard(toLeadLike(item));
         return;
       case 'assign_telecaller':
-        if (typeof KRY.openAssignTelecaller === 'function') KRY.openAssignTelecaller(toLeadLike(item));
+        if (typeof KRY.openAssignTelecaller === 'function')
+          KRY.openAssignTelecaller(toLeadLike(item));
         return;
       case 'prepare_quotation':
-        if (typeof KRY.openQuotationWizard === 'function') KRY.openQuotationWizard({ lead: toLeadLike(item) });
+        if (typeof KRY.openQuotationWizard === 'function')
+          KRY.openQuotationWizard({ lead: toLeadLike(item) });
         return;
       case 'send_quotation':
         if (typeof KRY.openQuoteDecision === 'function') KRY.openQuoteDecision(item, 'Sent');
@@ -1990,7 +2127,8 @@
         if (item.lead_id) KRY.openLeadModal(item.lead_id);
         return;
       case 'create_work_order':
-        if (typeof KRY.openWorkOrderWizard === 'function') KRY.openWorkOrderWizard({ lead: toLeadLike(item) });
+        if (typeof KRY.openWorkOrderWizard === 'function')
+          KRY.openWorkOrderWizard({ lead: toLeadLike(item) });
         return;
       case 'approve_work_order':
         if (typeof KRY.openWorkOrderApproval === 'function') KRY.openWorkOrderApproval(item);
