@@ -25,7 +25,7 @@ const { getDefaultStorageProvider } = require('../lib/storage');
 const { validateAttachment } = require('../lib/mime-validator');
 const { getDefaultAntivirusScanner } = require('../lib/av-scanner');
 
-const UPLOAD_DIR = path.join(config.rootDir, 'data', 'uploads');
+const UPLOAD_DIR = config.uploadStorageDir;
 const LEGACY_MAX_BYTES = 2 * 1024 * 1024;
 
 const ENTITY_TYPES = Object.freeze([

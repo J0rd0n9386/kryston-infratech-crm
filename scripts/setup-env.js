@@ -7,7 +7,10 @@ const target = path.join(root, '.env');
 if (fs.existsSync(target)) {
   console.log('Existing .env preserved.');
 } else if (process.env.NODE_ENV === 'production') {
-  throw new Error('Configure production environment explicitly before starting.');
+  if (!process.env.JWT_SECRET || !process.env.DEMO_PASSWORD) {
+    throw new Error('Configure JWT_SECRET and DEMO_PASSWORD in the production environment before starting.');
+  }
+  console.log('Production environment variables detected; no .env file created.');
 } else {
   let content = fs.readFileSync(path.join(root, '.env.example'), 'utf8');
   content = content.replace(/^JWT_SECRET=.*$/m, 'JWT_SECRET=' + crypto.randomBytes(48).toString('hex'));

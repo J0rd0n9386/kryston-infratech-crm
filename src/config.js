@@ -62,13 +62,17 @@ if (weakSecret && !isTest) {
   );
 }
 
-const databaseFile = process.env.DATABASE_FILE || './data/kryston.db';
+const dataDir = process.env.RAILWAY_VOLUME_MOUNT_PATH
+  ? path.resolve(process.env.RAILWAY_VOLUME_MOUNT_PATH)
+  : path.join(ROOT_DIR, 'data');
+const databaseFile = process.env.DATABASE_FILE || path.join(dataDir, 'kryston.db');
 const databasePath = path.isAbsolute(databaseFile)
   ? databaseFile
   : path.resolve(ROOT_DIR, databaseFile);
 
 const config = Object.freeze({
   rootDir: ROOT_DIR,
+  dataDir,
   env: NODE_ENV,
   isProduction,
   isTest,
@@ -94,7 +98,9 @@ const config = Object.freeze({
   idleTimeoutMs: int(process.env.IDLE_TIMEOUT_MS, 30 * 60 * 1000),
   // Attachments & storage
   attachmentMaxSize: int(process.env.ATTACHMENT_MAX_SIZE, 10 * 1024 * 1024),
-  attachmentStorageDir: process.env.ATTACHMENT_STORAGE_DIR || path.join(ROOT_DIR, 'data', 'attachments'),
+  attachmentStorageDir: process.env.ATTACHMENT_STORAGE_DIR || path.join(dataDir, 'attachments'),
+  uploadStorageDir: process.env.UPLOAD_STORAGE_DIR || path.join(dataDir, 'uploads'),
+  backupDir: process.env.BACKUP_DIR || path.join(dataDir, 'backups'),
   // Notifications & channels
   resendApiKey: process.env.RESEND_API_KEY || '',
   resendFromEmail: process.env.RESEND_FROM_EMAIL || 'notifications@kryston.local',

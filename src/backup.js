@@ -19,7 +19,7 @@ const logger = require('./lib/logger');
 
 function defaultDestination() {
   const stamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
-  return path.join(config.rootDir, 'backups', `kryston-${stamp}.db`);
+  return path.join(config.backupDir, `kryston-${stamp}.db`);
 }
 
 async function backup(destination = defaultDestination()) {
@@ -51,7 +51,7 @@ async function backup(destination = defaultDestination()) {
   }
 }
 
-function pruneBackups(backupDir = path.join(config.rootDir, 'backups'), retentionDays = config.backupRetentionDays) {
+function pruneBackups(backupDir = config.backupDir, retentionDays = config.backupRetentionDays) {
   if (!fs.existsSync(backupDir)) {
     return { prunedCount: 0, deletedFiles: [] };
   }
