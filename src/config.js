@@ -87,6 +87,7 @@ const config = Object.freeze({
   seedDemo: bool(process.env.SEED_DEMO, !isProduction),
   bcryptRounds: int(process.env.BCRYPT_ROUNDS, isTest ? 4 : 12),
   demoPassword: process.env.DEMO_PASSWORD || 'Admin@12345',
+  syncDemoPasswords: bool(process.env.SYNC_DEMO_PASSWORDS, false),
   loginWindowMs: int(process.env.LOGIN_WINDOW_MS, 15 * 60 * 1000),
   loginMaxAttempts: int(process.env.LOGIN_MAX_ATTEMPTS, 8),
   apiWindowMs: int(process.env.API_WINDOW_MS, 15 * 60 * 1000),

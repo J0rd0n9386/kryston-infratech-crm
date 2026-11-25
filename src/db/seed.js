@@ -11,7 +11,17 @@ const config = require('../config');
 
 function seedDemo(db, bcrypt) {
   const existing = db.prepare("SELECT COUNT(*) AS c FROM employees WHERE id != 'KRY-SYS-001'").get().c;
-  if (existing > 0) return;
+  if (existing > 0) {
+    if (config.syncDemoPasswords) {
+      const passwordHash = bcrypt.hashSync(config.demoPassword, config.bcryptRounds);
+      db.prepare(
+        `UPDATE employees
+         SET password_hash = ?, must_change_password = 0, token_version = token_version + 1
+         WHERE id != 'KRY-SYS-001'`,
+      ).run(passwordHash);
+    }
+    return;
+  }
 
   const year = new Date().getFullYear();
   const leadId = (n) => `KRY-LEAD-${year}-${String(n).padStart(4, '0')}`;
