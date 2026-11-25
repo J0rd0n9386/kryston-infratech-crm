@@ -1,6 +1,18 @@
 /* Record-first workspace. Deliberately scoped away from the welcome screen. */
 .app-shell { --sidebar-w:232px; --canvas:#fff; --surface:#fff; --surface-alt:#f8f9fb; --line:#eceef1; --line-strong:#dfe2e8; --ink:#24262b; --ink-soft:#454851; --muted:#737782; background:var(--canvas); }
 html[data-theme=dark] .app-shell { --canvas:#15171b; --surface:#191c21; --surface-alt:#20242b; --line:#2c3038; --line-strong:#414754; --ink:#eeeef1; --ink-soft:#c9ccd3; --muted:#a0a6b1; }
+/* Notification entries are full-width records, not browser-default buttons. */
+.app-shell .notify-panel { background:var(--surface); color:var(--ink); border-color:var(--line); }
+.app-shell .notify-head { background:var(--surface-alt); color:var(--ink); border-color:var(--line); }
+.app-shell .notify-list { background:var(--surface); }
+.app-shell .notify-item {
+  width:100%; margin:0; border:0; border-bottom:1px solid var(--line); border-radius:0;
+  background:var(--surface); color:var(--ink); text-align:left; cursor:pointer;
+}
+.app-shell .notify-item:hover { background:var(--surface-alt); }
+.app-shell .notify-item.unread { background:var(--brand-wash); color:var(--ink); }
+.app-shell .notify-item .notify-message { color:var(--ink); line-height:1.45; overflow-wrap:anywhere; }
+.app-shell .notify-item .notify-time { color:var(--muted); }
 .app-shell .sidebar { background:var(--surface-alt); padding:12px 10px; }
 .app-shell .sidebar-brand { padding:4px 8px 16px; margin-bottom:8px; }
 .app-shell .sidebar-brand strong { color:var(--ink); font-size:16px; font-weight:650; letter-spacing:-.025em; }
@@ -51,9 +63,18 @@ html[data-theme=dark] .app-shell { --canvas:#15171b; --surface:#191c21; --surfac
 .modal.record-drawer { width:min(780px,90vw); max-height:100dvh; height:100dvh; border-radius:0; border:0; border-left:1px solid var(--line); box-shadow:-12px 0 48px #0002; }
 .record-drawer .modal-head { padding:20px 24px; }
 .record-drawer .modal-body { padding:24px; }
+@media(max-width:960px) {
+  /* Only navigation scrolls; account and Sign out remain reachable at the bottom. */
+  .app-shell .sidebar { height:100dvh; overflow:hidden; padding-bottom:max(16px,env(safe-area-inset-bottom)); }
+  .app-shell .sidebar .nav { min-height:0; overflow-y:auto; overscroll-behavior:contain; padding-bottom:8px; }
+  .app-shell .sidebar-foot { flex:0 0 auto; margin-top:8px; padding-top:12px; background:var(--surface-alt); }
+  .app-shell #logoutButton { display:flex; width:100%; min-height:48px; color:var(--ink); border-color:var(--line-strong)!important; }
+}
 @media(max-width:700px) {
   .app-shell .topbar { padding:10px 12px; }
   .app-shell .btn,.app-shell .nav-item { min-height:44px; }
+  .app-shell .notify-panel { position:fixed; top:72px; right:12px; left:12px; width:auto; max-height:calc(100dvh - 88px); }
+  .app-shell .notify-list { max-height:calc(100dvh - 150px); }
   .app-shell .view { padding:16px 12px; }
   .app-shell table.data td { height:auto; border-right:0; }
   .app-shell .toolbar { flex-wrap:wrap; }
